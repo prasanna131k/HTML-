@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Game Start Form</title>
+  <style>
+    :root{
+      --bg: #0f1724;
+      --card: #0b1220;
+      --accent: #6ee7b7;
+      --muted: #9aa6b2;
+      --glass: rgba(255,255,255,0.03);
+      --radius: 12px;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      color-scheme: dark;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:
+        radial-gradient(800px 400px at 10% 10%, rgba(110,231,183,0.06), transparent 8%),
+        radial-gradient(700px 300px at 90% 90%, rgba(99,102,241,0.04), transparent 6%),
+        var(--bg);
+      padding:24px;
+    }
+
+    .container{
+      width:100%;
+      max-width:980px;
+      display:grid;
+      grid-template-columns: 1fr 360px;
+      gap:20px;
+    }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:var(--radius);
+      padding:18px;
+      box-shadow: 0 6px 20px rgba(2,6,23,0.6);
+      border:1px solid rgba(255,255,255,0.03);
+    }
+
+    header h1{ margin:0 0 6px 0; font-size:20px; }
+    header p{ margin:0; color:var(--muted); font-size:13px; }
+
+    form {
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    label{
+      font-size:13px;
+      color:var(--muted);
+      display:block;
+      margin-bottom:6px;
+    }
+
+    .row{ display:flex; gap:12px; }
+    .col{ flex:1; }
+
+    input[type="text"], input[type="email"], select, textarea {
+      width:100%;
+      padding:10px 12px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,0.04);
+      background:var(--glass);
+      color: #e6eef6;
+      font-size:14px;
+    }
+
+    .controls{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    .avatar-uploader{
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+    .avatar-preview{
+      width:72px;
+      height:72px;
+      border-radius:12px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      display:grid;
+      place-items:center;
+      font-weight:600;
+      color:var(--muted);
+      overflow:hidden;
+      border:1px dashed rgba(255,255,255,0.03);
+    }
+
+    .btn{
+      background:linear-gradient(90deg,var(--accent), #60a5fa);
+      color:#072021;
+      padding:10px 14px;
+      border-radius:10px;
+      border:none;
+      cursor:pointer;
+      font-weight:700;
+      box-shadow: 0 6px 18px rgba(43, 128, 110, 0.12);
+    }
+    .btn.ghost{
+      background:transparent;
+      color:var(--muted);
+      border:1px solid rgba(255,255,255,0.03);
+      box-shadow:none;
+      font-weight:600;
+    }
+
+    .small{ font-size:13px; color:var(--muted); }
+
+    .sidebar{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    .preview{
+      padding:14px;
+      border-radius:10px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
+      border:1px solid rgba(255,255,255,0.03);
+    }
+
+    .player-card{
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+
+    .player-info h3{ margin:0; font-size:16px; }
+    .player-info p{ margin:0; color:var(--muted); font-size:13px; }
+
+    .overlay{
+      position:fixed;
+      inset:0;
+      display:none;
+      place-items:center;
+      background:rgba(2,6,23,0.6);
+      z-index:40;
+    }
+    .overlay.show{ display:grid; }
+    .overlay .dialog{
+      background:var(--card);
+      padding:20px;
+      border-radius:12px;
+      text-align:center;
+      width:320px;
+      border:1px solid rgba(255,255,255,0.04);
+    }
+
+    footer{ display:flex; justify-content:space-between; align-items:center; gap:10px; }
+    @media (max-width:920px){
+      .container{ grid-template-columns: 1fr; }
+      .sidebar{ order: -1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <header>
+        <h1>Ready to Play?</h1>
+        <p>Fill the form to set up your player profile — local preview + saves to browser.</p>
+      </header>
+
+      <form id="gameForm" autocomplete="off" novalidate>
+        <div>
+          <label for="playerName">Player name</label>
+          <input id="playerName" name="playerName" type="text" placeholder="e.g. prasanna131k" required maxlength="24" />
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <label for="email">Email (optional)</label>
+            <input id="email" name="email" type="email" placeholder="you@domain.com" />
+          </div>
+          <div style="width:140px">
+            <label for="difficulty">Difficulty</label>
+            <select id="difficulty" name="difficulty" aria-label="difficulty">
+              <option value="easy">Easy</option>
+              <option value="normal" selected>Normal</option>
+              <option value="hard">Hard</option>
+              <option value="insane">Insane</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <label>Choose character</label>
+            <div class="controls">
+              <label><input type="radio" name="character" value="hunter" checked/> Hunter</label>
+              <label><input type="radio" name="character" value="engineer"/> Engineer</label>
+              <label><input type="radio" name="character" value="mage"/> Mage</label>
+            </div>
+          </div>
+
+          <div style="width:160px">
+            <label for="color">Accent color</label>
+            <input id="color" type="color" value="#6ee7b7" title="Theme color" />
+          </div>
+        </div>
+
+        <div>
+          <label for="bio">Short bio (optional)</label>
+          <textarea id="bio" rows="3" placeholder="A line about your play style..."></textarea>
+        </div>
+
+        <div style="display:flex; gap:12px; align-items:center;">
+          <div class="avatar-uploader">
+            <div class="avatar-preview" id="avatarPreview">No image</div>
+            <div>
+              <label class="small">Avatar (PNG/JPG)</label><br/>
+              <input id="avatarFile" type="file" accept="image/*" />
+            </div>
+          </div>
+
+          <div style="flex:1">
+            <label class="small">Achievements</label>
+            <div class="controls">
+              <label><input type="checkbox" name="ach" value="first_kill" /> First Kill</label>
+              <label><input type="checkbox" name="ach" value="sharpshooter" /> Sharpshooter</label>
+              <label><input type="checkbox" name="ach" value="survivor" /> Survivor</label>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:12px; align-items:center;">
+          <label style="display:flex; align-items:center; gap:8px;">
+            <input id="consent" type="checkbox" required />
+            <span class="small">I agree to local profile storage</span>
+          </label>
+        </div>
+
+        <footer>
+          <div style="display:flex; gap:8px;">
+            <button type="button" class="btn" id="startBtn">Start Game</button>
+            <button type="button" class="btn ghost" id="saveBtn">Save Profile</button>
+            <button type="button" class="btn ghost" id="loadBtn">Load Last</button>
+          </div>
+          <div class="small" id="formMsg"></div>
+        </footer>
+      </form>
+    </div>
+
+    <aside class="card sidebar">
+      <div class="preview">
+        <h3 style="margin:0 0 8px 0">Live preview</h3>
+        <div class="player-card">
+          <div id="pvAvatar" class="player-avatar" style="width:84px;height:84px;border-radius:12px;background:linear-gradient(90deg,#071420,#11202b);display:grid;place-items:center;color:var(--muted);font-weight:700">VA</div>
+          <div class="player-info">
+            <h3 id="pvName">Guest</h3>
+            <p id="pvDesc">Character: Hunter — Normal</p>
+            <p id="pvBio" class="small" style="margin-top:6px;color:var(--muted)">No bio yet.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="preview">
+        <h4 style="margin:0 0 8px 0">Settings snapshot</h4>
+        <div id="snapshot" class="small" style="line-height:1.5;color:var(--muted)">No saved profile.</div>
+      </div>
+
+      <div class="preview small">
+        Tip: Use "Save Profile" to store locally. Use "Start Game" to simulate starting — replace the action with your game launch logic.
+      </div>
+    </aside>
+  </div>
+
+  <div class="overlay" id="overlay">
+    <div class="dialog">
+      <h3 id="overlayTitle">Starting...</h3>
+      <p id="overlayText" class="small">Preparing your session</p>
+      <div style="margin-top:12px; display:flex; justify-content:center; gap:8px;">
+        <button class="btn" id="overlayOk">Okay</button>
+        <button class="btn ghost" id="overlayCancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Helper: get elements
+    const form = document.getElementById('gameForm');
+    const playerName = document.getElementById('playerName');
+    const email = document.getElementById('email');
+    const difficulty = document.getElementById('difficulty');
+    const bio = document.getElementById('bio');
+    const avatarFile = document.getElementById('avatarFile');
+    const avatarPreview = document.getElementById('avatarPreview');
+    const pvAvatar = document.getElementById('pvAvatar');
+    const pvName = document.getElementById('pvName');
+    const pvDesc = document.getElementById('pvDesc');
+    const pvBio = document.getElementById('pvBio');
+    const snapshot = document.getElementById('snapshot');
+    const formMsg = document.getElementById('formMsg');
+    const color = document.getElementById('color');
+
+    const startBtn = document.getElementById('startBtn');
+    const saveBtn = document.getElementById('saveBtn');
+    const loadBtn = document.getElementById('loadBtn');
+
+    const overlay = document.getElementById('overlay');
+    const overlayTitle = document.getElementById('overlayTitle');
+    const overlayText = document.getElementById('overlayText');
+    const overlayOk = document.getElementById('overlayOk');
+    const overlayCancel = document.getElementById('overlayCancel');
+
+    // State
+    let avatarDataUrl = null;
+
+    function updatePreview(){
+      const name = playerName.value.trim() || 'Guest';
+      const char = (document.querySelector('input[name="character"]:checked') || {}).value || 'hunter';
+      const diff = difficulty.value;
+      const bioText = bio.value.trim();
+      const initials = name.split(/\s+/).map(s => s[0]).slice(0,2).join('').toUpperCase();
+
+      // avatar
+      if (avatarDataUrl){
+        pvAvatar.style.backgroundImage = 'url('+avatarDataUrl+')';
+        pvAvatar.style.backgroundSize = 'cover';
+        pvAvatar.textContent = '';
+      } else {
+        pvAvatar.style.backgroundImage = '';
+        pvAvatar.textContent = initials || 'VA';
+      }
+
+      pvName.textContent = name;
+      pvDesc.textContent = `Character: ${capitalize(char)} — ${capitalize(diff)}`;
+      pvBio.textContent = bioText || 'No bio yet.';
+      pvBio.style.color = bioText ? '' : 'var(--muted)';
+
+      // accent color applied to preview border shadow
+      pvAvatar.style.border = '2px solid ' + color.value;
+
+      // snapshot text
+      const achs = Array.from(document.querySelectorAll('input[name="ach"]:checked')).map(n=>n.value);
+      snapshot.textContent = `Name: ${name}\nChar: ${capitalize(char)}\nDifficulty: ${capitalize(diff)}\nAchievements: ${achs.length?achs.join(', '):'—'}`;
+    }
+
+    function capitalize(s){
+      return s ? (s[0].toUpperCase()+s.slice(1)) : s;
+    }
+
+    // Avatar file -> preview
+    avatarFile.addEventListener('change', e => {
+      const f = e.target.files && e.target.files[0];
+      if (!f) return;
+      const reader = new FileReader();
+      reader.onload = function(ev){
+        avatarDataUrl = ev.target.result;
+        avatarPreview.style.backgroundImage = 'url('+avatarDataUrl+')';
+        avatarPreview.style.backgroundSize = 'cover';
+        avatarPreview.textContent = '';
+        updatePreview();
+      }
+      reader.readAsDataURL(f);
+    });
+
+    // live update from inputs
+    ['input','change'].forEach(evt=>{
+      form.addEventListener(evt, updatePreview, {passive:true});
+      color.addEventListener(evt, updatePreview, {passive:true});
+    });
+
+    // Save to localStorage
+    function saveProfile(){
+      if (!playerName.value.trim()){
+        showMessage('Enter player name before saving.', true); return;
+      }
+      const data = {
+        playerName: playerName.value.trim(),
+        email: email.value.trim(),
+        difficulty: difficulty.value,
+        bio: bio.value,
+        character: (document.querySelector('input[name="character"]:checked') || {}).value || 'hunter',
+        achievements: Array.from(document.querySelectorAll('input[name="ach"]:checked')).map(i=>i.value),
+        avatar: avatarDataUrl,
+        color: color.value,
+        savedAt: new Date().toISOString()
+      };
+      localStorage.setItem('gameProfile', JSON.stringify(data));
+      showMessage('Profile saved locally ✔');
+      updatePreview();
+    }
+
+    function loadProfile(){
+      const raw = localStorage.getItem('gameProfile');
+      if (!raw){ showMessage('No saved profile found', true); return; }
+      try {
+        const data = JSON.parse(raw);
+        playerName.value = data.playerName || '';
+        email.value = data.email || '';
+        difficulty.value = data.difficulty || 'normal';
+        bio.value = data.bio || '';
+        color.value = data.color || '#6ee7b7';
+        avatarDataUrl = data.avatar || null;
+
+        // set character
+        if (data.character){
+          const r = document.querySelector('input[name="character"][value="'+data.character+'"]');
+          if (r) r.checked = true;
+        }
+        // achievements
+        document.querySelectorAll('input[name="ach"]').forEach(cb=>{
+          cb.checked = (data.achievements||[]).includes(cb.value);
+        });
+
+        // update avatar preview element
+        if (avatarDataUrl){
+          avatarPreview.style.backgroundImage = 'url('+avatarDataUrl+')';
+          avatarPreview.style.backgroundSize = 'cover';
+          avatarPreview.textContent = '';
+        } else {
+          avatarPreview.style.backgroundImage = '';
+          avatarPreview.textContent = 'No image';
+        }
+
+        showMessage('Loaded profile from local storage ✔');
+        updatePreview();
+      } catch (err){
+        console.error(err);
+        showMessage('Failed to load profile', true);
+      }
+    }
+
+    function showMessage(msg, isError){
+      formMsg.textContent = msg;
+      formMsg.style.color = isError ? '#ff7b7b' : '';
+      setTimeout(()=>{ if (formMsg.textContent===msg) formMsg.textContent = ''; }, 3500);
+    }
+
+    // Start game (simulation) — runs validation then shows overlay.
+    startBtn.addEventListener('click', ()=>{
+      // simple validation
+      if (!playerName.value.trim()){
+        showMessage('Player name is required', true); playerName.focus(); return;
+      }
+      if (!document.getElementById('consent').checked){
+        showMessage('Please agree to local profile storage', true); return;
+      }
+
+      overlayTitle.textContent = 'Ready to launch';
+      overlayText.textContent = `Launching as "${playerName.value.trim()}" — ${capitalize(difficulty.value)} mode.`;
+      overlay.classList.add('show');
+
+      // In a real game you would call your game start function here.
+      // e.g. startMyGame(profileObject)
+    });
+
+    overlayOk.addEventListener('click', ()=>{
+      overlay.classList.remove('show');
+      showMessage('Game started (simulated). Replace overlay handler with your game launch logic.');
+    });
+    overlayCancel.addEventListener('click', ()=>overlay.classList.remove('show'));
+
+    saveBtn.addEventListener('click', saveProfile);
+    loadBtn.addEventListener('click', loadProfile);
+
+    // initialise preview on load
+    updatePreview();
+    // auto-load previous if present
+    if (localStorage.getItem('gameProfile')){
+      // don't auto-load into fields; just show snapshot in sidebar
+      const raw = localStorage.getItem('gameProfile');
+      try {
+        const data = JSON.parse(raw);
+        snapshot.textContent = `Last saved: ${new Date(data.savedAt).toLocaleString()} — ${data.playerName || 'Unnamed'}`;
+      } catch(ex){}
+    }
+  </script>
+</body>
+</html>
